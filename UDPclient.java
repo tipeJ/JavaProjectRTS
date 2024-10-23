@@ -2,6 +2,8 @@ import java.io.Console;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.DatagramPacket;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 public class UDPclient {
     public static void main(String[] args) {
@@ -36,9 +38,9 @@ public class UDPclient {
         DatagramSocket socket = null;
         try {
             // Encode the line in 'utf-8'
-            // line = new String(line.getBytes(), "utf-8");
+            ByteBuffer buffer = StandardCharsets.UTF_8.encode(line);
             socket = new DatagramSocket();
-            byte[] data = line.getBytes();
+            byte[] data = buffer.array();
             InetAddress address = InetAddress.getByName(serverURL);
             DatagramPacket packet = new DatagramPacket(data, data.length, address, serverPort);
             socket.send(packet);
