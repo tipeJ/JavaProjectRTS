@@ -6,6 +6,12 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ConnectionThreadTest",
+            "request": "launch",
+            "mainClass": "ConnectionThreadTest"
+        },
+        {
+            "type": "java",
             "name": "Current File",
             "request": "launch",
             "mainClass": "${file}"

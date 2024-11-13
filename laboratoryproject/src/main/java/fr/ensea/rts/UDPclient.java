@@ -1,3 +1,4 @@
+package fr.ensea.rts;
 import java.io.Console;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
