@@ -13,13 +13,6 @@ public class TCPServerTest {
     private TCPServer server;
     private Thread serverThread;
 
-    @BeforeEach
-    public void setUp() {
-        server = new TCPServer(8080);
-        serverThread = new Thread(() -> server.launch());
-        serverThread.start();
-    }
-
     @AfterEach
     public void tearDown() throws Exception {
         serverThread.interrupt();
@@ -28,18 +21,27 @@ public class TCPServerTest {
 
     @Test
     public void testServerStartsOnDefaultPort() {
-        TCPServer defaultServer = new TCPServer();
-        assertEquals("TCPServer listening on port 8080", defaultServer.toString());
+        server = new TCPServer();
+        serverThread = new Thread(() -> server.launch());
+        serverThread.start();
+        assertEquals("TCPServer listening on port 8080", server.toString());
+        serverThread.interrupt();
     }
 
     @Test
     public void testServerStartsOnSpecifiedPort() {
-        TCPServer specifiedServer = new TCPServer(9090);
-        assertEquals("TCPServer listening on port 9090", specifiedServer.toString());
+        server = new TCPServer(9095);
+        serverThread = new Thread(() -> server.launch());
+        serverThread.start();
+        assertEquals("TCPServer listening on port 9095", server.toString());
+        serverThread.interrupt();
     }
 
     @Test
     public void testServerEchoesMessage() throws Exception {
+        server = new TCPServer();
+        serverThread = new Thread(() -> server.launch());
+        serverThread.start();
         try (Socket socket = new Socket("localhost", 8080);
              PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"), true);
              BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"))) {
@@ -53,6 +55,9 @@ public class TCPServerTest {
 
     @Test
     public void testServerHandlesMultipleConnections() throws Exception {
+        server = new TCPServer();
+        serverThread = new Thread(() -> server.launch());
+        serverThread.start();
         try (Socket socket1 = new Socket("localhost", 8080);
              PrintWriter out1 = new PrintWriter(new OutputStreamWriter(socket1.getOutputStream(), "UTF-8"), true);
              BufferedReader in1 = new BufferedReader(new InputStreamReader(socket1.getInputStream(), "UTF-8"));
