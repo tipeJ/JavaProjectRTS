@@ -45,6 +45,17 @@ public class UDPServer{
     }
      public static void main(String[] args) {
         int port = DEFAULT_PORT;
+        if (args.length > 1) {
+            System.err.println("Usage: java UDPServer <PORT>");
+            return;
+        } else if (args.length == 1) {
+            try {
+                port = Integer.parseInt(args[0]);
+            } catch (Exception e) {
+                System.err.println("Invalid port");
+                return;
+            }
+        }
         UDPServer server = new UDPServer(port);
         System.out.println(server);
         server.launch();
