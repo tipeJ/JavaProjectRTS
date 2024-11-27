@@ -1,9 +1,6 @@
-package fr.ensea.rts;
+package fr.ensea.rts.tcp;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
+import org.junit.jupiter.api.*;
 import java.io.*;
 import java.net.Socket;
 

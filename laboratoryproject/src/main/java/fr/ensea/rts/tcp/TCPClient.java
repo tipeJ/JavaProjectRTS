@@ -2,7 +2,7 @@
  * A TCP client that connects to a server, sends messages, and prints the server's responses.
  * It reads user input, sends it to the server, and prints the response.
  */
-package fr.ensea.rts;
+package fr.ensea.rts.tcp;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;

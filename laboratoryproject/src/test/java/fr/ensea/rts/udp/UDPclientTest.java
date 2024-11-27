@@ -1,4 +1,4 @@
-package fr.ensea.rts;
+package fr.ensea.rts.udp;
 import org.junit.jupiter.api.*;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -28,8 +28,8 @@ public class UDPclientTest {
     @Test
     public void testMainWithInvalidArguments() {
         String[] args = {};
-        UDPclient.main(args);
-        assertEquals("Usage: java UDPclient <URL> <PORT>", errContent.toString().trim());
+        UDPClient.main(args);
+        assertEquals("Usage: java UDPClient <URL> <PORT>", errContent.toString().trim());
     }
 
     @Test
@@ -42,7 +42,7 @@ public class UDPclientTest {
         DatagramSocket serverSocket = new DatagramSocket(serverPort);
 
         // Test sendLine command
-        UDPclient.sendLine(serverURL, serverPort, "Hello, World!");
+        UDPClient.sendLine(serverURL, serverPort, "Hello, World!");
 
         // Receive the packet
         byte[] receiveData = new byte[1024];

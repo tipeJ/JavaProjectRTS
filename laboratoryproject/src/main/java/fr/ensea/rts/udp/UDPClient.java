@@ -2,7 +2,7 @@
  * A UDP client that sends text messages to a UDP server.
  * The client reads input from the console, sends it to the server, and prints the server's response.
  */
-package fr.ensea.rts;
+package fr.ensea.rts.udp;
 
 import java.net.DatagramSocket;
 import java.net.InetAddress;

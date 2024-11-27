@@ -2,7 +2,7 @@
  * A UDP server that listens for incoming UDP packets and prints the received messages.
  * It listens on a specified port and prints the received data along with the client's address.
  */
-package fr.ensea.rts;
+package fr.ensea.rts.udp;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;

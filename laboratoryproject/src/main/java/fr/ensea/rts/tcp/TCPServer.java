@@ -2,7 +2,7 @@
  * A TCP server that listens for incoming connections on a specified port.
  * It processes requests from a single client, sends a response, and then shuts down.
  */
-package fr.ensea.rts;
+package fr.ensea.rts.tcp;
 
 import java.io.*;
 import java.net.ServerSocket;

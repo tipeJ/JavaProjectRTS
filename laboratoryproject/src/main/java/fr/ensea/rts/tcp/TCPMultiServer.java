@@ -2,7 +2,7 @@
  * A multi-threaded TCP server that accepts multiple client connections concurrently.
  * Each client is handled by a new thread.
  */
-package fr.ensea.rts;
+package fr.ensea.rts.tcp;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;

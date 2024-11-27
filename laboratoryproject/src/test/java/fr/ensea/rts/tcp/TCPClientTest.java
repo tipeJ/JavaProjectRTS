@@ -1,16 +1,8 @@
-package fr.ensea.rts;
+package fr.ensea.rts.tcp;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.AfterEach;
-import java.io.ByteArrayInputStream;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.net.ServerSocket;
-import java.net.Socket;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.*;
+import java.io.*;
+import java.net.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TCPClientTest {
