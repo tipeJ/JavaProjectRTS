@@ -1,58 +1,101 @@
 package fr.ensea.rts;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TCPServer {
-    private int port;
+    private final int port;
     private static final int DEFAULT_PORT = 8080;
+    private AtomicBoolean running = new AtomicBoolean(false);
+    private ServerSocket serverSocket;
 
     public TCPServer(int port) {
+        if (port <= 0 || port > 65535) {
+            throw new IllegalArgumentException("Invalid port number: " + port);
+        }
         this.port = port;
     }
 
     public TCPServer() {
-        this.port = DEFAULT_PORT;
+        this(DEFAULT_PORT);
     }
-
 
     public void launch() {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
+            this.serverSocket = serverSocket;
+            running.set(true);
             System.out.println("TCP Server started on port " + port);
 
-        
-            while (true) {
-               
-                Socket clientSocket = serverSocket.accept();
-                System.out.println("Connection established with " + clientSocket.getInetAddress());
+            while (running.get()) {
+                try {
+                    Socket clientSocket = serverSocket.accept();
+                    System.out.println("Connection established with " + clientSocket.getInetAddress());
 
-            
-                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(), "UTF-8"));
-                PrintWriter out = new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream(), "UTF-8"), true);
-
-                
-                String receivedLine = in.readLine();
-                if (receivedLine != null) {
-                    System.out.println("Received: " + receivedLine);
-
-                    
-                    out.println("Echo: " + receivedLine);
+                    // Handle each client in a separate thread
+                    new Thread(() -> handleClient(clientSocket)).start();
+                } catch (IOException e) {
+                    if (!running.get()) {
+                        System.out.println("Server stopped.");
+                        break;
+                    }
+                    e.printStackTrace();
                 }
-                clientSocket.close();
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
+            if (!running.get()) {
+                System.out.println("Server socket closed.");
+            } else {
+                e.printStackTrace();
+            }
+        } finally {
+            running.set(false);
+        }
+    }
+
+    private void handleClient(Socket clientSocket) {
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(), "UTF-8"));
+             PrintWriter out = new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream(), "UTF-8"), true)) {
+
+            String receivedLine;
+            while ((receivedLine = in.readLine()) != null) {
+                System.out.println("Received: " + receivedLine);
+
+                out.println("Echo: " + receivedLine);
+            }
+
+            System.out.println("Client " + clientSocket.getInetAddress() + " disconnected.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                clientSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void stop() {
+        running.set(false);
+        try {
+            if (serverSocket != null && !serverSocket.isClosed()) {
+                serverSocket.close();
+            }
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public String toString() {
-        return "TCPServer listening on port " + port;
+        if (running.get()) {
+            return "TCPServer listening on port " + port;
+        } else {
+            return "TCPServer idle on port " + port;
+        }
     }
-
 
     public static void main(String[] args) {
         int port = DEFAULT_PORT;
@@ -65,7 +108,7 @@ public class TCPServer {
             }
         }
         TCPServer server = new TCPServer(port);
-        System.out.println(server); // Calls toString() method
+        System.out.println(server);
         server.launch();
     }
 }
