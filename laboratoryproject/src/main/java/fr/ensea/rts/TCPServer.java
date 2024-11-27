@@ -28,21 +28,21 @@ public class TCPServer {
             running.set(true);
             System.out.println("TCP Server started on port " + port);
 
-            while (running.get()) {
-                try {
-                    Socket clientSocket = serverSocket.accept();
-                    System.out.println("Connection established with " + clientSocket.getInetAddress());
+            try {
+                Socket clientSocket = serverSocket.accept();
+                System.out.println("Connection established with " + clientSocket.getInetAddress());
 
-                    // Handle each client in a separate thread
-                    new Thread(() -> handleClient(clientSocket)).start();
-                } catch (IOException e) {
-                    if (!running.get()) {
-                        System.out.println("Server stopped.");
-                        break;
-                    }
+                // Handle the client
+                handleClient(clientSocket);
+
+            } catch (IOException e) {
+                if (!running.get()) {
+                    System.out.println("Server stopped.");
+                } else {
                     e.printStackTrace();
                 }
             }
+
         } catch (IOException e) {
             if (!running.get()) {
                 System.out.println("Server socket closed.");
@@ -61,7 +61,6 @@ public class TCPServer {
             String receivedLine;
             while ((receivedLine = in.readLine()) != null) {
                 System.out.println("Received: " + receivedLine);
-
                 out.println("Echo: " + receivedLine);
             }
 

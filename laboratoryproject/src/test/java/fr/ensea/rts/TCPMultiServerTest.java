@@ -3,7 +3,12 @@ package fr.ensea.rts;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import static org.junit.jupiter.api.Assertions.*;
@@ -44,10 +49,25 @@ class TCPMultiServerTest {
 
     @Test
     void testServerAcceptsMultipleConnections() {
+
         try (Socket socket1 = new Socket("localhost", 8080);
-             Socket socket2 = new Socket("localhost", 8080)) {
+             PrintWriter out1 = new PrintWriter(new OutputStreamWriter(socket1.getOutputStream(), "UTF-8"), true);
+             BufferedReader in1 = new BufferedReader(new InputStreamReader(socket1.getInputStream(), "UTF-8"));
+             Socket socket2 = new Socket("localhost", 8080);
+             PrintWriter out2 = new PrintWriter(new OutputStreamWriter(socket2.getOutputStream(), "UTF-8"), true);
+             BufferedReader in2 = new BufferedReader(new InputStreamReader(socket2.getInputStream(), "UTF-8"))) {
             assertTrue(socket1.isConnected(), "Client 1 should be able to connect to the server");
             assertTrue(socket2.isConnected(), "Client 2 should be able to connect to the server");
+
+            String message1 = "Hello, Server 1!";
+            out1.println(message1);
+            String response1 = in1.readLine();
+            assertEquals("/127.0.0.1: " + message1, response1);
+
+            String message2 = "Hello, Server 2!";
+            out2.println(message2);
+            String response2 = in2.readLine();
+            assertEquals("/127.0.0.1: " + message2, response2);
         } catch (IOException e) {
             fail("Clients should be able to connect to the server");
         }

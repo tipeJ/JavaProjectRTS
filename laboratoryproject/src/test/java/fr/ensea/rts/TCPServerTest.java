@@ -1,12 +1,12 @@
 package fr.ensea.rts;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+
+import java.io.*;
 import java.net.Socket;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TCPServerTest {
@@ -15,26 +15,36 @@ public class TCPServerTest {
 
     @AfterEach
     public void tearDown() throws Exception {
-        serverThread.interrupt();
-        serverThread.join();
+        if (server != null) {
+            server.stop(); // Signal the server to stop
+        }
+        if (serverThread != null) {
+            serverThread.join(); // Wait for the thread to terminate
+        }
+    }
+
+    @BeforeEach
+    public void setUp() {
+        server = null;
+        serverThread = null;
     }
 
     @Test
-    public void testServerStartsOnDefaultPort() {
+    public void testServerIsCreatedOnDefaultPort() {
         server = new TCPServer();
-        serverThread = new Thread(() -> server.launch());
-        serverThread.start();
-        assertEquals("TCPServer listening on port 8080", server.toString());
-        serverThread.interrupt();
+        assertEquals("TCPServer idle on port 8080", server.toString());
+    }
+
+    @Test
+    public void testServerQuitsOnInvalidPort() {
+        IllegalArgumentException exception = org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> new TCPServer(-1));
+        assertEquals("Invalid port number: -1", exception.getMessage());
     }
 
     @Test
     public void testServerStartsOnSpecifiedPort() {
         server = new TCPServer(9095);
-        serverThread = new Thread(() -> server.launch());
-        serverThread.start();
-        assertEquals("TCPServer listening on port 9095", server.toString());
-        serverThread.interrupt();
+        assertEquals("TCPServer idle on port 9095", server.toString());
     }
 
     @Test
@@ -50,30 +60,8 @@ public class TCPServerTest {
             out.println(message);
             String response = in.readLine();
             assertEquals("Echo: " + message, response);
+            System.out.println("Response: " + response);
         }
     }
 
-    @Test
-    public void testServerHandlesMultipleConnections() throws Exception {
-        server = new TCPServer();
-        serverThread = new Thread(() -> server.launch());
-        serverThread.start();
-        try (Socket socket1 = new Socket("localhost", 8080);
-             PrintWriter out1 = new PrintWriter(new OutputStreamWriter(socket1.getOutputStream(), "UTF-8"), true);
-             BufferedReader in1 = new BufferedReader(new InputStreamReader(socket1.getInputStream(), "UTF-8"));
-             Socket socket2 = new Socket("localhost", 8080);
-             PrintWriter out2 = new PrintWriter(new OutputStreamWriter(socket2.getOutputStream(), "UTF-8"), true);
-             BufferedReader in2 = new BufferedReader(new InputStreamReader(socket2.getInputStream(), "UTF-8"))) {
-
-            String message1 = "Hello, Server 1!";
-            out1.println(message1);
-            String response1 = in1.readLine();
-            assertEquals("Echo: " + message1, response1);
-
-            String message2 = "Hello, Server 2!";
-            out2.println(message2);
-            String response2 = in2.readLine();
-            assertEquals("Echo: " + message2, response2);
-        }
-    }
 }
