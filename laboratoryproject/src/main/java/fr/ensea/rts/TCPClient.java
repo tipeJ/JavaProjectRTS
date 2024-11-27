@@ -1,3 +1,7 @@
+/**
+ * A TCP client that connects to a server, sends messages, and prints the server's responses.
+ * It reads user input, sends it to the server, and prints the response.
+ */
 package fr.ensea.rts;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -6,6 +10,12 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
 public class TCPClient {
+    /**
+     * Main method to run the TCP client.
+     * Accepts server URL and port as arguments, enter text to be echoed.
+     *
+     * @param args Command-line arguments: server URL and port.
+     */
     public static void main(String[] args) {
         String serverURL = "";
         int serverPort = -1;
@@ -27,15 +37,12 @@ public class TCPClient {
 
         try (
             Socket socket = new Socket(serverURL, serverPort);
-            // Input stream from user (console)
             BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
-            // Output stream to send data to the server
             OutputStream outputStream = socket.getOutputStream();
             BufferedReader serverResponse = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8))
         ) {
             String line;
 
-            // Continuously read input from the user, until <CTRL>+D is pressed
             while ((line = userInput.readLine()) != null) {
                 if (line.isEmpty()) {
                     continue;
@@ -44,7 +51,6 @@ public class TCPClient {
                 outputStream.write((line + "\n").getBytes(StandardCharsets.UTF_8));
                 outputStream.flush();
 
-                // Read the response from the server (assume it's a hex string)
                 String response = serverResponse.readLine();
                 if (response != null) {
                     System.out.println("Received from server (hex): " + response);

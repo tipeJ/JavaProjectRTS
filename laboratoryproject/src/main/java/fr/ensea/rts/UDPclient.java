@@ -1,17 +1,27 @@
+/**
+ * A UDP client that sends text messages to a UDP server.
+ * The client reads input from the console, sends it to the server, and prints the server's response.
+ */
 package fr.ensea.rts;
-import java.io.Console;
+
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.DatagramPacket;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
-public class UDPclient {
+public class UDPClient {
+    /**
+     * Main method that runs the UDP client.
+     * Accepts server URL and port as arguments, and sends user-inputted lines to the server.
+     *
+     * @param args Command-line arguments: server URL and port.
+     */
     public static void main(String[] args) {
         String serverURL = "";
         int serverPort = -1;
         if (args.length != 2) {
-            System.err.println("Usage: java UDPclient <URL> <PORT>");
+            System.err.println("Usage: java UDPClient <URL> <PORT>");
             return;
         }
 
@@ -34,6 +44,13 @@ public class UDPclient {
         }
     }
 
+    /**
+     * Sends a single line of text to the server using UDP.
+     *
+     * @param serverURL The server's URL.
+     * @param serverPort The server's port.
+     * @param line The text line to send to the server.
+     */
     public static void sendLine(String serverURL, int serverPort, String line) {
         System.out.println("Sending line to server: " + line);
         DatagramSocket socket = null;
@@ -53,5 +70,4 @@ public class UDPclient {
             }
         }
     }
-    
 }

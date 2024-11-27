@@ -1,3 +1,7 @@
+/**
+ * A TCP server that listens for incoming connections on a specified port.
+ * It processes requests from a single client, sends a response, and then shuts down.
+ */
 package fr.ensea.rts;
 
 import java.io.*;
@@ -11,6 +15,11 @@ public class TCPServer {
     private AtomicBoolean running = new AtomicBoolean(false);
     private ServerSocket serverSocket;
 
+    /**
+     * Constructs a TCP server with the specified port.
+     *
+     * @param port The port on which the server will listen.
+     */
     public TCPServer(int port) {
         if (port <= 0 || port > 65535) {
             throw new IllegalArgumentException("Invalid port number: " + port);
@@ -18,10 +27,16 @@ public class TCPServer {
         this.port = port;
     }
 
+    /**
+     * Constructs a TCP server with the default port (8080).
+     */
     public TCPServer() {
         this(DEFAULT_PORT);
     }
 
+    /**
+     * Starts the TCP server, accepts a client connection, and handles communication.
+     */
     public void launch() {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             this.serverSocket = serverSocket;
@@ -54,6 +69,12 @@ public class TCPServer {
         }
     }
 
+    /**
+     * Handles communication with the connected client.
+     * Reads input from the client and sends back an echo response.
+     *
+     * @param clientSocket The client socket for communication.
+     */
     private void handleClient(Socket clientSocket) {
         try (BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(), "UTF-8"));
              PrintWriter out = new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream(), "UTF-8"), true)) {
@@ -76,6 +97,9 @@ public class TCPServer {
         }
     }
 
+    /**
+     * Stops the server, preventing it from accepting new connections.
+     */
     public void stop() {
         running.set(false);
         try {
@@ -87,6 +111,11 @@ public class TCPServer {
         }
     }
 
+    /**
+     * Returns a string representation of the server.
+     *
+     * @return A string indicating the server is either active or idle.
+     */
     @Override
     public String toString() {
         if (running.get()) {
@@ -96,6 +125,11 @@ public class TCPServer {
         }
     }
 
+    /**
+     * Main method to start the TCP server.
+     *
+     * @param args Command-line arguments: optional port number.
+     */
     public static void main(String[] args) {
         int port = DEFAULT_PORT;
 
