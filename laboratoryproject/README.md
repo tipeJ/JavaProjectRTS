@@ -1,8 +1,8 @@
 # TCP/UDP communication demo project for RTS
 
 ## Fetching
-Download via web ui, or clone via command line: "git clone https://github.com/tipeJ/JavaProjectRTS"
-The project is located in the "laboratoryproject" subfolder
+Download the parent repository through web ui, or clone via command line: "git clone https://github.com/tipeJ/JavaProjectRTS"
+The project is located in the "laboratoryproject" subfolder, the folder of this README file
 
 ## Running
 
@@ -24,6 +24,9 @@ On command line, run "java TCPMultiServer.java". You can specify port with a por
 
 ## Testing
 The tests are located in the src/test/java/fr/ensea/rts folder
+
+### Running the tests
+Tests have been run on the vscode UI, there is currently no single script that runs all tests on the command line.
 
 Note that unfinished tests may leave processes hanging and prevent testing. To prevent this, either reboot or manually shut down the test processes.
 
