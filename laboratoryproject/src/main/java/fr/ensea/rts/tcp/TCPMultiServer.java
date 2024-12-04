@@ -38,7 +38,6 @@ public class TCPMultiServer {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Connection established with " + clientSocket.getInetAddress());
 
-                // Handle the client in a new thread
                 ConnectionThread clientThread = new ConnectionThread(clientSocket);
                 clientThread.start();
             }

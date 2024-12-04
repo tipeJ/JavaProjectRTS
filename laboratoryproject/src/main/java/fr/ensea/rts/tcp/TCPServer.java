@@ -47,7 +47,6 @@ public class TCPServer {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Connection established with " + clientSocket.getInetAddress());
 
-                // Handle the client
                 handleClient(clientSocket);
 
             } catch (IOException e) {

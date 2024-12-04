@@ -16,7 +16,6 @@ public class ConnectionThread extends Thread {
     @Override
     public void run() {
         try {
-            // Input and output streams to communicate with the client
             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(), "UTF-8"));
             PrintWriter out = new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream(), "UTF-8"), true);
 

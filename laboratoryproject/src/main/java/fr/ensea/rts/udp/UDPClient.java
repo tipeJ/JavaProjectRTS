@@ -55,7 +55,7 @@ public class UDPClient {
         System.out.println("Sending line to server: " + line);
         DatagramSocket socket = null;
         try {
-            // Encode the line in 'utf-8'
+            // Need to encode the string line in 'utf-8' before sending
             ByteBuffer buffer = StandardCharsets.UTF_8.encode(line);
             socket = new DatagramSocket();
             byte[] data = buffer.array();
