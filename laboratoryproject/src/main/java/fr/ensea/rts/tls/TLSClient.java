@@ -1,13 +1,26 @@
+/**
+ * The TLSClient class demonstrates a simple client implementation using
+ * the TLS protocol to connect to a secure server.
+ */
 package fr.ensea.rts.tls;
 
 import javax.net.ssl.*;
 import java.io.*;
 import java.security.KeyStore;
 
+/**
+ * A client class implementing TLS protocol for secure communication with a server.
+ */
 public class TLSClient {
-    private static final String KEYSTORE_PASSWORD = "123456"; // Use constants for reusable values
+    private static final String KEYSTORE_PASSWORD = "123456";
     private static final String ENCODING = "UTF-8";
 
+    /**
+     * The entry point for the client application.
+     * Accepts a server URL and port number as arguments.
+     *
+     * @param args command-line arguments specifying the server URL and port number.
+     */
     public static void main(String[] args) {
         if (args.length != 2) {
             System.err.println("Usage: java TLSClient <URL> <PORT>");
@@ -32,6 +45,13 @@ public class TLSClient {
         }
     }
 
+    /**
+     * Initializes the SSLContext using the specified keystore.
+     *
+     * @param keystorePath the path to the keystore file.
+     * @return an initialized SSLContext.
+     * @throws Exception if an error occurs during initialization.
+     */
     private static SSLContext initializeSSLContext(String keystorePath) throws Exception {
         KeyStore trustStore = KeyStore.getInstance("JKS");
         try (InputStream trustStoreStream = new FileInputStream(keystorePath)) {
@@ -50,6 +70,14 @@ public class TLSClient {
 
         return sslContext;
     }
+
+    /**
+     * Establishes a connection to the server using the specified SSLContext.
+     *
+     * @param serverURL the server's URL or IP address.
+     * @param serverPort the server's port number.
+     * @param sslContext the SSLContext to use for the connection.
+     */
     private static void connectToServer(String serverURL, int serverPort, SSLContext sslContext) {
         SSLSocketFactory socketFactory = sslContext.getSocketFactory();
 
@@ -61,6 +89,11 @@ public class TLSClient {
         }
     }
 
+    /**
+     * Handles communication with the server via the provided socket.
+     *
+     * @param socket the SSL socket connected to the server.
+     */
     private static void communicateWithServer(SSLSocket socket) {
         try (
                 BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in, ENCODING));
@@ -91,4 +124,3 @@ public class TLSClient {
         }
     }
 }
-
